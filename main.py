@@ -7,11 +7,13 @@ button_y = 40
 black = (0, 0, 0)
 white = (255, 255, 255)
 gray = (100, 100, 100)
+red = (255, 0, 0)
+blue = (0, 0, 255)
 
 pygame.init()
 pygame.font.init()
 font = pygame.font.SysFont("Arial", 36)
-font_button = pygame.font.SysFont("Arial", 25)
+font_button = pygame.font.SysFont("Arial", 27)
 screen = pygame.display.set_mode([window_x, window_y])
 
 clicked = True
@@ -26,9 +28,6 @@ def window():
     text = font.render('CANVAS', True, black)
     text_rect = text.get_rect(center=(window_x/2, window_y/20))
     screen.blit(text, text_rect)
-
-    draw = buttons(window_x/10, window_y - 2 * window_y/10, black, gray, "DRAW")
-    draw.draw_button()
 
 class buttons():
     def __init__(self, x, y, color, hover_color, text):
@@ -61,21 +60,60 @@ class buttons():
         pygame.draw.rect(screen, color, rect, 3)
         screen.blit(text, text_rect)
 
-
-def draw():
-    window()
-
 def main():
+    drawing = False
+    mouse_position = (0, 0)
+    last_pos = None
     condition = True
+
+    draw = False
+    draw_color = black
+    draw_size = 1
+
+    screen.fill(white)
+    window()
+    draw_button = buttons(window_x/10, window_y - 2 * window_y/10, black, gray, "DRAW")
+    erase_button = buttons(window_x/10 * 2 + 5, window_y - 2 * window_y/10, black, gray, "ERASE")
+    black_button = buttons(window_x/10, window_y - 1 * window_y/10, black, gray, "BLACK")
+    red_button = buttons(window_x/10 * 2 + 5, window_y - 1 * window_y/10, black, gray, "RED")
+    blue_button = buttons(window_x/10 * 3 + 10, window_y - 1 * window_y/10, black, gray, "BLUE")
+    draw_button.draw_button()
+    erase_button.draw_button()
+    black_button.draw_button()
+    red_button.draw_button()
+    blue_button.draw_button()
     while(condition):
-        screen.fill(white)
-        draw()
-        
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 pygame.quit()
                 exit(0)
-
+            elif event.type == pygame.MOUSEMOTION:
+                if (draw and drawing):
+                    mouse_position = pygame.mouse.get_pos()
+                    if last_pos is not None:
+                        pygame.draw.line(screen, draw_color, last_pos, mouse_position, draw_size)
+                    last_pos = mouse_position
+            elif event.type == pygame.MOUSEBUTTONUP:
+                mouse_position = (0, 0)
+                drawing = False
+                last_pos = None
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if (draw_button.rect.collidepoint(event.pos)):
+                    draw_size = 3
+                    if draw == True:
+                        draw = False
+                    else:
+                        draw = True
+                elif (erase_button.rect.collidepoint(event.pos)):
+                    draw_color = white
+                    draw_size = 5
+                if (black_button.rect.collidepoint(event.pos)):
+                    draw_color = black
+                elif (red_button.rect.collidepoint(event.pos)):
+                    draw_color = red
+                elif (blue_button.rect.collidepoint(event.pos)):
+                    draw_color = blue
+                drawing = True
         pygame.display.update()
 
 if __name__ == "__main__":
