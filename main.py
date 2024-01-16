@@ -30,12 +30,13 @@ def window():
     screen.blit(text, text_rect)
 
 class buttons():
-    def __init__(self, x, y, color, hover_color, text):
+    def __init__(self, x, y, color, hover_color, text, text_color):
         self.x = x
         self.y = y
         self.color = color
         self.hover_color = hover_color
         self.text = text
+        self.text_color = text_color
         self.rect = pygame.Rect(self.x, self.y, button_x, button_y)
 
     def draw_button(self):
@@ -54,7 +55,7 @@ class buttons():
             color = self.hover_color
             color_text = self.hover_color
         
-        text = font_button.render(self.text, True, color_text)
+        text = font_button.render(self.text, True, self.text_color)
         text_rect = text.get_rect(center=(button_x/2 + self.x, button_y/2 + self.y))
         
         pygame.draw.rect(screen, color, rect, 3)
@@ -72,11 +73,11 @@ def main():
 
     screen.fill(white)
     window()
-    draw_button = buttons(window_x/10, window_y - 2 * window_y/10, black, gray, "DRAW")
-    erase_button = buttons(window_x/10 * 2 + 5, window_y - 2 * window_y/10, black, gray, "ERASE")
-    black_button = buttons(window_x/10, window_y - 1 * window_y/10, black, gray, "BLACK")
-    red_button = buttons(window_x/10 * 2 + 5, window_y - 1 * window_y/10, black, gray, "RED")
-    blue_button = buttons(window_x/10 * 3 + 10, window_y - 1 * window_y/10, black, gray, "BLUE")
+    draw_button = buttons(window_x/10, window_y - 2 * window_y/10, black, gray, "DRAW", black)
+    erase_button = buttons(window_x/10 * 2 + 5, window_y - 2 * window_y/10, black, gray, "ERASE", black)
+    black_button = buttons(window_x/10, window_y - 1 * window_y/10, black, gray, "BLACK", black)
+    red_button = buttons(window_x/10 * 2 + 5, window_y - 1 * window_y/10, black, gray, "RED", red)
+    blue_button = buttons(window_x/10 * 3 + 10, window_y - 1 * window_y/10, black, gray, "BLUE", blue)
     draw_button.draw_button()
     erase_button.draw_button()
     black_button.draw_button()
